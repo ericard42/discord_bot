@@ -1,8 +1,9 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"log"
+	"strings"
 )
 
 func messagesManager(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -10,16 +11,27 @@ func messagesManager(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	args := strings.Split(m.Content, " ")
+	fmt.Println(args)
+
+	for i := 0; i < len(args); i++ {
+		fmt.Println("'" + args[i] + "'")
+	}
+
+	if m.Content[0] != '!' {
+		return
+	}
+
 	if m.Content == "ping" {
 		_, err := s.ChannelMessageSend(m.ChannelID, "pong")
 		if err != nil {
-			log.Println(err)
+			fmt.Println(err)
 			return
 		}
 	}
 	_, err := s.ChannelMessageSend(m.ChannelID, m.Content)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return
 	}
 }
